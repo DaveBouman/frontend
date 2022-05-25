@@ -22,7 +22,7 @@ const TimeLine = () => {
   const [messages, setMessages] = useState<Message[]>([]);
 
   useEffect(() => {
-    fetch("http://localhost/api/v1/messages/messages", {
+    fetch("http://20.240.3.23:3001/api/v1/messages/messages", {
       method: "GET",
       credentials: "include",
     })
@@ -41,14 +41,19 @@ const TimeLine = () => {
 
   return (
     <>
-    {/* <div>{messages[1]?.uuid}</div>
+      {/* <div>{messages[1]?.uuid}</div>
     <div>{messages[1]?.content}</div> */}
 
-      {messages?.slice(0).reverse().map((message: Message, key: number) => {
-        return (
-          <div key={key}>{message.content} - {message.uuid}</div>)
-      })}
-
+      {messages
+        ?.slice(0)
+        .reverse()
+        .map((message: Message, key: number) => {
+          return (
+            <div key={key}>
+              {message.content} - {message.uuid}
+            </div>
+          );
+        })}
     </>
   );
 };

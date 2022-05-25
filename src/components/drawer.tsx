@@ -22,6 +22,8 @@ import { UserContext } from "./context/userContext";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import { useNavigate } from "react-router-dom";
 import SearchBar from "./searchBar";
+import HomeIcon from "@mui/icons-material/Home";
+import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 
 const drawerWidth = 240;
 
@@ -94,14 +96,6 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-const googleLogin = () => {
-  window.open("http://www.localhost/api/v1/users/google/auth", "_self");
-};
-
-const googleLogout = () => {
-  window.open("http://localhost/api/v1/users/google/logout", "_self");
-};
-
 const MiniDrawer = (props: {
   children: React.ReactChild[] | React.ReactChild | undefined;
 }) => {
@@ -116,6 +110,13 @@ const MiniDrawer = (props: {
 
   const handleDrawerClose = () => {
     setOpen(false);
+  };
+
+  const signOut = () => {
+    fetch(`http://localhost:3001/api/v1/users/users/signout`, {
+      method: "GET",
+      credentials: "include",
+    });
   };
 
   return (
@@ -137,15 +138,15 @@ const MiniDrawer = (props: {
               <MenuIcon />
             </IconButton>
             <Typography variant="h6" sx={{ flexGrow: 1 }} component="div">
-              {userContext?.name?.givenName}
+              {userContext?.username}
             </Typography>
-            {userContext?.isLoggedIn ? (
-              <Button color="inherit" onClick={googleLogout}>
+            {userContext?.isloggedIn ? (
+              <Button color="inherit" onClick={signOut}>
                 Logout
               </Button>
             ) : (
-              <Button color="inherit" onClick={googleLogin}>
-                Login
+              <Button color="inherit" onClick={() => navigation("/signin")}>
+                Sign in
               </Button>
             )}
           </Toolbar>
@@ -162,28 +163,26 @@ const MiniDrawer = (props: {
           </DrawerHeader>
           <Divider />
           <List>
-            {["Inbox", "Starred", "Send"].map((text, index) => (
-              <ListItemButton
-                key={text}
+            <ListItemButton
+              key="home"
+              onClick={() => navigation("/")}
+              sx={{
+                minHeight: 48,
+                justifyContent: open ? "initial" : "center",
+                px: 2.5,
+              }}
+            >
+              <ListItemIcon
                 sx={{
-                  minHeight: 48,
-                  justifyContent: open ? "initial" : "center",
-                  px: 2.5,
+                  minWidth: 0,
+                  mr: open ? 3 : "auto",
+                  justifyContent: "center",
                 }}
-                onClick={() => alert(text)}
               >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : "auto",
-                    justifyContent: "center",
-                  }}
-                >
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
-              </ListItemButton>
-            ))}
+                <HomeIcon />
+              </ListItemIcon>
+              <ListItemText primary="home" sx={{ opacity: open ? 1 : 0 }} />
+            </ListItemButton>
             <ListItemButton
               key="profile"
               onClick={() => navigation("/profile")}
@@ -204,12 +203,10 @@ const MiniDrawer = (props: {
               </ListItemIcon>
               <ListItemText primary="profile" sx={{ opacity: open ? 1 : 0 }} />
             </ListItemButton>
-          </List>
-          <Divider />
-          <List>
-            {["All Kweets", "Trash", "Spam"].map((text, index) => (
+            {userContext?.role === "admin" ? (
               <ListItemButton
-                key={text}
+                key="admin"
+                onClick={() => navigation("/admin")}
                 sx={{
                   minHeight: 48,
                   justifyContent: open ? "initial" : "center",
@@ -223,12 +220,19 @@ const MiniDrawer = (props: {
                     justifyContent: "center",
                   }}
                 >
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                  <AdminPanelSettingsIcon />
                 </ListItemIcon>
-                <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
+                <ListItemText
+                  primary="profile"
+                  sx={{ opacity: open ? 1 : 0 }}
+                />
               </ListItemButton>
-            ))}
+            ) : (
+              <></>
+            )}
           </List>
+          <Divider />
+          <List></List>
         </Drawer>
         <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
           <DrawerHeader />

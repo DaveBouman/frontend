@@ -1,5 +1,5 @@
 import { Grid } from "@mui/material";
-import KweetForm from "../components/kweetForm";
+import KweetForm from "../components/KweetForm";
 import Mentions from "../components/mentions";
 import SearchBar from "../components/searchBar";
 import TimeLine from "../components/timeLine";

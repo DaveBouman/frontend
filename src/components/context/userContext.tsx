@@ -1,13 +1,10 @@
 import React, { useState, createContext, useEffect } from "react";
 
 type User = {
-  isLoggedIn: boolean;
-  name: {
-    givenName: string;
-  };
-  familyName: string;
-  theme: string;
-  language: string;
+  username: string;
+  bio: string;
+  isloggedIn: boolean;
+  role: string;
 };
 
 export const UserContext = createContext<Partial<User | null>>(null);
@@ -19,8 +16,8 @@ const UserProvider = (props: {
 
   useEffect(() => {
     const getUser = () => {
-      fetch("http://localhost/api/v1/users/google/auth/success", {
-        method: "GET",
+      fetch("http://localhost:3001/api/v1/users/users/authSucces", {
+        method: "POST",
         credentials: "include",
         headers: {
           Accept: "application/json",
@@ -33,11 +30,12 @@ const UserProvider = (props: {
           throw new Error("authentication failed!");
         })
         .then((resObject) => {
+          console.log(resObject);
           setUser(resObject.user);
           setUser((prevState) => {
             return {
               ...prevState,
-              isLoggedIn: true,
+              isloggedIn: true,
               theme: "light",
             };
           });

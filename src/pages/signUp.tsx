@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useEffect, useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -13,7 +14,6 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
 
 function Copyright(props: any) {
   return (
@@ -35,19 +35,18 @@ function Copyright(props: any) {
 
 const theme = createTheme();
 
-const Entry = () => {
+const SignUp = () => {
+  const navigation = useNavigate();
   const [username, setUsername] = useState<string>();
   const [password, setPassword] = useState<string>();
-  const navigation = useNavigate();
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
   };
 
-  const signIn = () => {
-    fetch("http://localhost:3001/api/v1/users/users/signin", {
+  const signUp = () => {
+    fetch("http://localhost:3001/api/v1/users/users/create", {
       method: "POST",
-      credentials: "include",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
@@ -76,7 +75,7 @@ const Entry = () => {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign in
+            Sign up
           </Typography>
           <Box
             component="form"
@@ -107,25 +106,14 @@ const Entry = () => {
               autoComplete="current-password"
             />
             <Button
-              onClick={signIn}
+              onClick={signUp}
               type="submit"
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Sign In
+              Sign Up
             </Button>
-            <Grid container>
-              <Grid item>
-                <Link
-                  href="#"
-                  variant="body2"
-                  onClick={() => navigation("/signup")}
-                >
-                  {"Don't have an account? Sign Up"}
-                </Link>
-              </Grid>
-            </Grid>
           </Box>
         </Box>
         <Copyright sx={{ mt: 8, mb: 4 }} />
@@ -134,4 +122,4 @@ const Entry = () => {
   );
 };
 
-export default Entry;
+export default SignUp;

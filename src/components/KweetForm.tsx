@@ -8,7 +8,7 @@ const KweetForm: React.FC = () => {
   const userContext = useContext(UserContext);
 
   const postMessage = () => {
-    fetch("http://localhost/api/v1/messages/messages", {
+    fetch("http://localhost:3002/api/v1/messages/messages", {
       method: "POST",
       credentials: "include",
       headers: {
@@ -17,7 +17,7 @@ const KweetForm: React.FC = () => {
         "Access-Control-Allow-Credentials": "true",
       },
       body: JSON.stringify({
-        name: userContext?.name,
+        name: userContext?.username,
         content: content,
       }),
     });
@@ -29,7 +29,7 @@ const KweetForm: React.FC = () => {
           <TextField
             placeholder="Create Kweet"
             multiline
-            onChange={e => setContent(e.target.value)}
+            onChange={(e) => setContent(e.target.value)}
             inputProps={{ maxLength: 140 }}
             rows={4}
           />
