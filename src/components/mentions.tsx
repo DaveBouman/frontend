@@ -1,53 +1,72 @@
-import * as React from "react";
-import { styled } from "@mui/material/styles";
-import Box from "@mui/material/Box";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemAvatar from "@mui/material/ListItemAvatar";
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import ListItemText from "@mui/material/ListItemText";
-import Avatar from "@mui/material/Avatar";
+import { Card, CardContent, Stack } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
-import FolderIcon from "@mui/icons-material/Folder";
-import DeleteIcon from "@mui/icons-material/Delete";
+import { useState, useEffect } from "react";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import { useNavigate } from "react-router-dom";
 
-function generate(element: React.ReactElement) {
-  return [0, 1, 2].map((value) =>
-    React.cloneElement(element, {
-      key: value,
+type kweet = {
+  content: string;
+  name: string;
+  hearts: string;
+  created: string;
+};
+
+const Mentions = () => {
+  const [kweets, setKweets] = useState<kweet[]>([]);
+  const navigation = useNavigate();
+  useEffect(() => {
+    fetch(`http://localhost:3002/api/v1/messages/messages/mentions`, {
+      method: "GET",
+      credentials: "include",
     })
-  );
-}
-
-const Demo = styled("div")(({ theme }) => ({
-  backgroundColor: theme.palette.background.paper,
-}));
-
-export default function InteractiveList() {
-  const [secondary, setSecondary] = React.useState(true);
-
+      .then((response) => {
+        if (response.status === 200) return response.json();
+        throw new Error("authentication failed!");
+      })
+      .then((resObject) => {
+        console.log(resObject.entity);
+        setKweets(resObject.entity);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
   return (
-    <Box sx={{ flexGrow: 1, maxWidth: 752 }}>
-      <Demo>
-        <List>
-          {generate(
-            <ListItem
-              secondaryAction={
-                <IconButton edge="end" aria-label="delete">
-                  <ArrowForwardIosIcon />
-                </IconButton>
-              }
-            >
-              <ListItemAvatar>
-                <Avatar>
-                  <FolderIcon />
-                </Avatar>
-              </ListItemAvatar>
-              <ListItemText primary="General kenobi" secondary="hello there " />
-            </ListItem>
-          )}
-        </List>
-      </Demo>
-    </Box>
+    <>
+      mentions:
+      {kweets
+        ?.slice(0)
+        .reverse()
+        .map((kweet: kweet, key: number) => {
+          return (
+            <>
+              <Card sx={{ minWidth: 275 }} key={key}>
+                <CardContent>
+                  <Stack
+                    direction="row"
+                    alignItems="center"
+                    gap={1}
+                    onClick={() => navigation(`/user/${kweet.name}`)}
+                  >
+                    {kweet.name}
+                  </Stack>
+                  <Stack direction="row" alignItems="center" gap={1}>
+                    {kweet.content}
+                  </Stack>
+                  <IconButton aria-label="search">
+                    <FavoriteIcon style={{ fill: "grey" }} />
+                  </IconButton>
+                  <Stack direction="row" alignItems="center" gap={1}>
+                    {new Date(kweet.created).toLocaleString()}
+                  </Stack>
+                </CardContent>
+              </Card>
+              <br />
+            </>
+          );
+        })}
+    </>
   );
-}
+};
+
+export default Mentions;

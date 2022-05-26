@@ -30,7 +30,6 @@ const UserProvider = (props: {
           throw new Error("authentication failed!");
         })
         .then((resObject) => {
-          console.log(resObject);
           setUser(resObject.user);
           setUser((prevState) => {
             return {
