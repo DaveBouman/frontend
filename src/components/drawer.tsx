@@ -113,7 +113,7 @@ const MiniDrawer = (props: {
   };
 
   const signOut = () => {
-    fetch(`http://localhost:3001/api/v1/users/users/signout`, {
+    fetch(`http://20.240.3.23:3001/api/v1/users/users/signout`, {
       method: "GET",
       credentials: "include",
     });

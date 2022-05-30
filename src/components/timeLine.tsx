@@ -22,7 +22,7 @@ const TimeLine = () => {
   const [messages, setMessages] = useState<Message[]>([]);
 
   useEffect(() => {
-    fetch("http://20.240.3.23:3001/api/v1/messages/messages", {
+    fetch("http://localhost:3001/api/v1/messages/messages", {
       method: "GET",
       credentials: "include",
     })

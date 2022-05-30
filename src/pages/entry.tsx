@@ -45,9 +45,10 @@ const Entry = () => {
   };
 
   const signIn = () => {
-    fetch("http://localhost:3001/api/v1/users/users/signin", {
+    fetch(`http://localhost:3001/api/v1/users/users/signin`, {
       method: "POST",
       credentials: "include",
+      redirect: "follow",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
@@ -57,7 +58,7 @@ const Entry = () => {
         username: username,
         password: password,
       }),
-    });
+    }).then(() => console.log("sign in"));
   };
 
   return (
@@ -78,55 +79,48 @@ const Entry = () => {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
-          <Box
-            component="form"
-            onSubmit={handleSubmit}
-            noValidate
-            sx={{ mt: 1 }}
+          <TextField
+            onChange={(e) => setUsername(e.target.value)}
+            margin="normal"
+            required
+            fullWidth
+            id="name"
+            label="Name"
+            name="name"
+            autoComplete="name"
+            autoFocus
+          />
+          <TextField
+            onChange={(e) => setPassword(e.target.value)}
+            margin="normal"
+            required
+            fullWidth
+            name="password"
+            label="Password"
+            type="password"
+            id="password"
+            autoComplete="current-password"
+          />
+          <Button
+            onClick={signIn}
+            type="submit"
+            fullWidth
+            variant="contained"
+            sx={{ mt: 3, mb: 2 }}
           >
-            <TextField
-              onChange={(e) => setUsername(e.target.value)}
-              margin="normal"
-              required
-              fullWidth
-              id="name"
-              label="Name"
-              name="name"
-              autoComplete="name"
-              autoFocus
-            />
-            <TextField
-              onChange={(e) => setPassword(e.target.value)}
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-            />
-            <Button
-              onClick={signIn}
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Sign In
-            </Button>
-            <Grid container>
-              <Grid item>
-                <Link
-                  href="#"
-                  variant="body2"
-                  onClick={() => navigation("/signup")}
-                >
-                  {"Don't have an account? Sign Up"}
-                </Link>
-              </Grid>
+            Sign In
+          </Button>
+          <Grid container>
+            <Grid item>
+              <Link
+                href="#"
+                variant="body2"
+                onClick={() => navigation("/signup")}
+              >
+                {"Don't have an account? Sign Up"}
+              </Link>
             </Grid>
-          </Box>
+          </Grid>
         </Box>
         <Copyright sx={{ mt: 8, mb: 4 }} />
       </Container>
